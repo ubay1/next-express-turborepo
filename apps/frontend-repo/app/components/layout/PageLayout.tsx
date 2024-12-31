@@ -33,7 +33,11 @@ interface Props {
 
 const pages = [
   { label: "Home", value: "home", path: "/" },
-  { label: "User Management", value: "user-management", path: "/user-management" },
+  {
+    label: "User Management",
+    value: "user-management",
+    path: "/user-management",
+  },
 ];
 
 export default function PageLayout(props: Props) {
@@ -41,8 +45,12 @@ export default function PageLayout(props: Props) {
   const { children } = props;
   const { user, name, photoURL, email, setName, setPhotoURL } = useUser();
 
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
+    null
+  );
+  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
+    null
+  );
   const [loadingLogout, setLoadingLogout] = React.useState(false);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -63,22 +71,20 @@ export default function PageLayout(props: Props) {
   const handleLogout = async () => {
     setLoadingLogout(true);
     await signOut(getAuth(app));
-    await fetch("/api/logout");
-
-    router.push("/");
+    await fetch("/api/logout", { method: "POST" });
     router.push("/login");
   };
 
   return (
     <>
       <Box>
-        <AppBar position='static'>
-          <Container maxWidth='xl'>
+        <AppBar position="static">
+          <Container maxWidth="xl">
             <Toolbar disableGutters>
               <Typography
-                variant='h6'
+                variant="h6"
                 noWrap
-                component='div'
+                component="div"
                 sx={{
                   mr: 2,
                   display: { xs: "none", md: "flex" },
@@ -89,16 +95,26 @@ export default function PageLayout(props: Props) {
                   cursor: "pointer",
                 }}
               >
-                <Link href='/' style={{ textDecoration: "none", color: "inherit" }}>
+                <Link
+                  href="/"
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
                   eBuddy
                 </Link>
               </Typography>
               <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-                <IconButton size='large' aria-label='account of current user' aria-controls='menu-appbar' aria-haspopup='true' onClick={handleOpenNavMenu} color='inherit'>
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={handleOpenNavMenu}
+                  color="inherit"
+                >
                   <MenuIcon />
                 </IconButton>
                 <Menu
-                  id='menu-appbar'
+                  id="menu-appbar"
                   anchorEl={anchorElNav}
                   anchorOrigin={{
                     vertical: "bottom",
@@ -115,17 +131,22 @@ export default function PageLayout(props: Props) {
                 >
                   {pages.map((page) => (
                     <MenuItem key={page.value}>
-                      <Link href={page.path} style={{ textDecoration: "none", color: "inherit" }}>
-                        <Typography sx={{ textAlign: "center" }}>{page.label}</Typography>
+                      <Link
+                        href={page.path}
+                        style={{ textDecoration: "none", color: "inherit" }}
+                      >
+                        <Typography sx={{ textAlign: "center" }}>
+                          {page.label}
+                        </Typography>
                       </Link>
                     </MenuItem>
                   ))}
                 </Menu>
               </Box>
               <Typography
-                variant='h5'
+                variant="h5"
                 noWrap
-                component='div'
+                component="div"
                 sx={{
                   mr: 2,
                   display: { xs: "flex", md: "none" },
@@ -137,27 +158,41 @@ export default function PageLayout(props: Props) {
                   cursor: "pointer",
                 }}
               >
-                <Link href='/' style={{ textDecoration: "none", color: "inherit" }}>
+                <Link
+                  href="/"
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
                   eBuddy
                 </Link>
               </Typography>
               <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
                 {pages.map((page) => (
-                  <Button key={page.value} LinkComponent={Link} href={page.path} sx={{ my: 2, color: "white", display: "block" }}>
+                  <Button
+                    key={page.value}
+                    LinkComponent={Link}
+                    href={page.path}
+                    sx={{ my: 2, color: "white", display: "block" }}
+                  >
                     {page.label}
                   </Button>
                 ))}
               </Box>
               <Box sx={{ flexGrow: 0 }}>
-                <ToggleTheme customStyle={{ position: "relative", top: "0px", color: "white" }} />
-                <Tooltip title='Open settings'>
+                <ToggleTheme
+                  customStyle={{
+                    position: "relative",
+                    top: "0px",
+                    color: "white",
+                  }}
+                />
+                <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                     <Avatar alt={name} src={photoURL} />
                   </IconButton>
                 </Tooltip>
                 <Menu
                   sx={{ mt: "45px" }}
-                  id='menu-appbar'
+                  id="menu-appbar"
                   anchorEl={anchorElUser}
                   anchorOrigin={{
                     vertical: "top",
@@ -172,8 +207,13 @@ export default function PageLayout(props: Props) {
                   onClose={handleCloseUserMenu}
                 >
                   <MenuItem>
-                    <Link href={"/profile"} style={{ textDecoration: "none", color: "inherit" }}>
-                      <Typography sx={{ textAlign: "center" }}>Profile</Typography>
+                    <Link
+                      href={"/profile"}
+                      style={{ textDecoration: "none", color: "inherit" }}
+                    >
+                      <Typography sx={{ textAlign: "center" }}>
+                        Profile
+                      </Typography>
                     </Link>
                   </MenuItem>
                   <MenuItem onClick={handleLogout}>
@@ -185,12 +225,20 @@ export default function PageLayout(props: Props) {
           </Container>
         </AppBar>
 
-        <Box component='main' sx={{ p: 3 }}>
+        <Box component="main" sx={{ p: 3 }}>
           {children}
         </Box>
 
-        <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "center" }} open={loadingLogout}>
-          <Alert onClose={() => setLoadingLogout(false)} severity='info' variant='filled' sx={{ width: "100%" }}>
+        <Snackbar
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          open={loadingLogout}
+        >
+          <Alert
+            onClose={() => setLoadingLogout(false)}
+            severity="info"
+            variant="filled"
+            sx={{ width: "100%" }}
+          >
             Please wait logout is being processed ..
           </Alert>
         </Snackbar>
